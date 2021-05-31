@@ -17,19 +17,15 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req, res, next) => {
-  try {
-    const params = joiAttempt(req.body, {
-      slug: joi.string().required(),
-      title: joi.string().required(),
-      content: joi.string(),
-      author: joi.string().required(),
-      tags: joi.array().items(joi.string()),
-    });
-    const article = await Article.create(params);
-    return res.json(article);
-  } catch (e) {
-    return next(e);
-  }
+  const params = joiAttempt(req.body, {
+    slug: joi.string().required(),
+    title: joi.string().required(),
+    content: joi.string(),
+    author: joi.string().required(),
+    tags: joi.array().items(joi.string()),
+  });
+  const article = await Article.create(params);
+  return res.json(article);
 });
 
 router.put('/:id', async (req, res) => {
