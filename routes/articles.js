@@ -3,6 +3,9 @@ const router = express.Router();
 const joiAttempt = require('../helpers/joiAttempt');
 const joi = require('joi');
 const Article = require('../models/Article');
+const NotFoundError = require('../errors/NotFoundError');
+
+
 
 router.get('/', async (req, res) => {
   const articles = await Article.find().valid();
@@ -13,6 +16,10 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   const article = await Article.findOne().valid().byId(req.params.id);
+  if (!article) {
+    throw new NotFoundError('Article Not Found');
+  }
+
   return res.json(article);
 });
 
@@ -30,6 +37,9 @@ router.post('/', async (req, res, next) => {
 
 router.put('/:id', async (req, res) => {
   let article = await Article.findOne().valid().byId(req.params.id);
+  if (!article) {
+    throw new NotFoundError('Article Not Found');
+  }
 
   await article.updateOne(req.body);
   article = await Article.findById(article._id);
@@ -39,6 +49,10 @@ router.put('/:id', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
   let article = await Article.findOne().valid().byId(req.params.id);
+  if (!article) {
+    throw new NotFoundError('Article Not Found');
+  }
+
   await article.destroy();
   article = await Article.findById(article._id);
 
