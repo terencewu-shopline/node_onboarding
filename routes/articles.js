@@ -6,6 +6,25 @@ const Article = require('../models/Article');
 const NotFoundError = require('../errors/NotFoundError');
 
 
+const articleSchema = {
+  slug: joi.string(),
+  title: joi.string(),
+  content: joi.string(),
+  author: joi.string(),
+  tags: joi.array().items(joi.string()),
+};
+
+const createArticleSchema = {
+  ...articleSchema,
+  slug: articleSchema.slug.required(),
+  title: articleSchema.title.required(),
+  author: articleSchema.author.required(),
+};
+
+const updateArticleSchema = {
+  ...articleSchema,
+  slug: articleSchema.slug.forbidden(),
+};
 
 router.get('/', async (req, res) => {
   const articles = await Article.find().valid();
@@ -24,24 +43,19 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req, res, next) => {
-  const params = joiAttempt(req.body, {
-    slug: joi.string().required(),
-    title: joi.string().required(),
-    content: joi.string(),
-    author: joi.string().required(),
-    tags: joi.array().items(joi.string()),
-  });
+  const params = joiAttempt(req.body, createArticleSchema);
   const article = await Article.create(params);
   return res.json(article);
 });
 
 router.put('/:id', async (req, res) => {
+  const params = joiAttempt(req.body, updateArticleSchema);
   let article = await Article.findOne().valid().byId(req.params.id);
   if (!article) {
     throw new NotFoundError('Article Not Found');
   }
 
-  await article.updateOne(req.body);
+  await article.updateOne(params);
   article = await Article.findById(article._id);
 
   return res.json(article);
