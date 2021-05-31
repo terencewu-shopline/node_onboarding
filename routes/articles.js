@@ -3,6 +3,7 @@ const router = express.Router();
 const joiAttempt = require('../helpers/joiAttempt');
 const joi = require('joi');
 const Article = require('../models/Article');
+const ArticleEntity = require('../entities/ArticleEntity');
 const NotFoundError = require('../errors/NotFoundError');
 
 
@@ -28,9 +29,7 @@ const updateArticleSchema = {
 
 router.get('/', async (req, res) => {
   const articles = await Article.find().valid();
-  return res.json({
-    items: articles,
-  })
+  return res.json(ArticleEntity.presentCollection(articles));
 });
 
 router.get('/:id', async (req, res) => {
@@ -39,13 +38,13 @@ router.get('/:id', async (req, res) => {
     throw new NotFoundError('Article Not Found');
   }
 
-  return res.json(article);
+  return res.json(ArticleEntity.present(article));
 });
 
 router.post('/', async (req, res, next) => {
   const params = joiAttempt(req.body, createArticleSchema);
   const article = await Article.create(params);
-  return res.json(article);
+  return res.json(ArticleEntity.present(article));
 });
 
 router.put('/:id', async (req, res) => {
@@ -58,7 +57,7 @@ router.put('/:id', async (req, res) => {
   await article.updateOne(params);
   article = await Article.findById(article._id);
 
-  return res.json(article);
+  return res.json(ArticleEntity.present(article));
 });
 
 router.delete('/:id', async (req, res) => {
@@ -70,7 +69,7 @@ router.delete('/:id', async (req, res) => {
   await article.destroy();
   article = await Article.findById(article._id);
 
-  return res.json(article);
+  return res.json(ArticleEntity.present(article));
 });
 
 module.exports = router;
