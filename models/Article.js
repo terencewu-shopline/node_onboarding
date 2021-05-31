@@ -18,6 +18,11 @@ const ArticleSchema = new mongoose.Schema({
   },
   tags: {
     type: [String],
+  },
+  status: {
+    type: String,
+    default: 'active',
+    enum: ['active', 'removed'],
   }
 }, {
   timestamps: {
@@ -25,6 +30,14 @@ const ArticleSchema = new mongoose.Schema({
     updatedAt: 'updated_at',
   }
 });
+
+ArticleSchema.query.valid = function() {
+  return this.where({ status: { $ne: 'removed' }});
+}
+
+ArticleSchema.query.byId = function(_id) {
+  return this.where({ _id });
+}
 
 const Article = mongoose.model('Article', ArticleSchema);
 
