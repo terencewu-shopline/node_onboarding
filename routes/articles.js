@@ -31,9 +31,7 @@ router.put('/:id', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
   let article = await Article.findOne().valid().byId(req.params.id);
-  await article.updateOne({
-    status: 'removed',
-  })
+  await article.destroy();
   article = await Article.findById(article._id);
 
   return res.json(article);

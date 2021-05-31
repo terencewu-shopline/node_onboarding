@@ -39,6 +39,12 @@ ArticleSchema.query.byId = function(_id) {
   return this.where({ _id });
 }
 
+ArticleSchema.methods.destroy = function() {
+  return this.updateOne({
+    status: 'removed',
+  });
+}
+
 const Article = mongoose.model('Article', ArticleSchema);
 
 module.exports = Article;
