@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-
+const joiAttempt = require('../helpers/joiAttempt');
+const joi = require('joi');
 const Article = require('../models/Article');
 
 router.get('/', async (req, res) => {
@@ -15,9 +16,20 @@ router.get('/:id', async (req, res) => {
   return res.json(article);
 });
 
-router.post('/', async (req, res) => {
-  const article = await Article.create(req.body);
-  return res.json(article);
+router.post('/', async (req, res, next) => {
+  try {
+    const params = joiAttempt(req.body, {
+      slug: joi.string().required(),
+      title: joi.string().required(),
+      content: joi.string(),
+      author: joi.string().required(),
+      tags: joi.array().items(joi.string()),
+    });
+    const article = await Article.create(params);
+    return res.json(article);
+  } catch (e) {
+    return next(e);
+  }
 });
 
 router.put('/:id', async (req, res) => {

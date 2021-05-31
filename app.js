@@ -46,6 +46,14 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
+
+  if (/application\/json/.test(req.get('Content-Type'))) {
+    return res.json({
+      message: err.message,
+      code: err.name,
+    })
+  }
+
   res.render('error');
 });
 
