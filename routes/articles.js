@@ -20,4 +20,13 @@ router.post('/', async (req, res) => {
   return res.json(article);
 });
 
+router.put('/:id', async (req, res) => {
+  let article = await Article.findById(req.params.id);
+
+  await article.updateOne(req.body);
+  article = await Article.findById(article._id);
+
+  return res.json(article);
+});
+
 module.exports = router;
