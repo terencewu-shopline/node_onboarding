@@ -10,4 +10,14 @@ router.get('/', async (req, res) => {
   })
 });
 
+router.get('/:id', async (req, res) => {
+  const article = await Article.findById(req.params.id);
+  return res.json(article);
+});
+
+router.post('/', async (req, res) => {
+  const article = await Article.create(req.body);
+  return res.json(article);
+});
+
 module.exports = router;
