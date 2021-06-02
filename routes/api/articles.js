@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const joiAttempt = require('../helpers/joiAttempt');
+const joiAttempt = require('../../helpers/joiAttempt');
 const joi = require('joi');
-const Article = require('../models/Article');
-const ArticleEntity = require('../entities/ArticleEntity');
-const NotFoundError = require('../errors/NotFoundError');
+const Article = require('../../models/Article');
+const ArticleEntity = require('../../entities/ArticleEntity');
+const NotFoundError = require('../../errors/NotFoundError');
 
 
 const articleSchema = {
