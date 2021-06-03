@@ -1,5 +1,12 @@
 const joi = require('joi');
 joi.ValidationError.prototype.status = 422;
+Object.defineProperty(joi.ValidationError.prototype, 'extras', {
+  get: function() {
+    return {
+      details: this.details
+    };
+  }
+});
 
 const errorHandler = function(err, req, res, next) {
   // set locals, only providing error in development
@@ -13,6 +20,7 @@ const errorHandler = function(err, req, res, next) {
     return res.json({
       message: err.message,
       code: err.name,
+      extras: err.extras || {},
     })
   }
 
