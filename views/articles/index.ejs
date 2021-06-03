@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.css">
+  </head>
+  <body>
+    <div class="container" style="padding-top: 40px;">
+      <div class="clearfix">
+        <div class="float-right">
+          <a class="button" href="/articles/new">Create</a>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Content</th>
+            <th>Author</th>
+            <th>Created At</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% articles.forEach(article => { %>
+            <tr>
+              <td><%= article.title %></td>
+              <td><%= article.content %></td>
+              <td><%= article.author %></td>
+              <td><%= article.created_at.toISOString().slice(0, 10); %></td>
+              <td><a href="/articles/<%= article._id %>">Edit</a></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>
